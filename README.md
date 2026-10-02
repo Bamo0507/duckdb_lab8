@@ -119,7 +119,38 @@ generar los resultados principales.
 
 ## Como levantar el ambiente
 
-<!-- TODO (Ejercicio 1.5) -->
+El equipo trabaja con Docker desde la línea de comandos (Docker Engine con Docker Compose;
+en macOS, por ejemplo, con Colima), sin depender de Docker Desktop.
+
+1. Construir las imágenes y levantar los contenedores. La primera vez se descargan varios
+   cientos de MB, por lo que puede tardar algunos minutos.
+
+   ```bash
+   docker compose up --build -d
+   ```
+
+2. Verificar que ambos servicios estén corriendo:
+
+   ```bash
+   docker compose ps
+   ```
+
+3. Acceder a los servicios:
+   - JupyterLab: <http://localhost:8888> (sin token).
+   - Metabase: <http://localhost:3000> (la primera vez solicita crear un usuario administrador).
+
+4. Ejecutar `notebooks/ejercicio_1.ipynb`, que valida los servicios y las herramientas del
+   ambiente.
+
+5. Para detener el ambiente:
+
+   ```bash
+   docker compose down
+   ```
+
+**Problema común:** si el puerto 3000 u 8888 ya está ocupado por otro proceso,
+`docker compose up` falla con `address already in use`, por lo que hay que liberar el puerto
+antes de levantar el ambiente.
 
 ## Como descargar los datos
 
