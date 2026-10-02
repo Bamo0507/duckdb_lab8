@@ -1,21 +1,21 @@
 -- CC3084 - Lab 8: DuckDB
 -- Ejercicio 3 - Consultas directas sobre archivos Parquet
 --
--- Todas las consultas leen directamente los archivos Parquet de data/raw/, sin
+-- Todas las consultas leen directamente los archivos Parquet de 2026, sin
 -- importarlos a una tabla. Las rutas son relativas a la raiz del proyecto
 -- (/workspace dentro del contenedor lab). En notebooks/ejercicio_3.ipynb se
 -- ejecutan las mismas consultas con rutas relativas a notebooks/ (../data/raw).
 --
 -- Fuentes:
---   data/raw/yellow/*/*.parquet   taxis amarillos
---   data/raw/green/*/*.parquet    taxis verdes
---   data/raw/*/*/*.parquet        ambos tipos
+--   data/raw/yellow/2026/*.parquet   taxis amarillos
+--   data/raw/green/2026/*.parquet    taxis verdes
+--   data/raw/*/2026/*.parquet        ambos tipos
 
 
 -- Q1 (3.1) Cantidad de archivos disponibles por tipo de taxi
 SELECT regexp_extract(file, '(yellow|green)_tripdata', 1) AS tipo,
        COUNT(*)                                          AS archivos
-FROM glob('data/raw/*/*/*.parquet')
+FROM glob('data/raw/*/2026/*.parquet')
 GROUP BY tipo
 ORDER BY tipo DESC;
 
@@ -23,14 +23,16 @@ ORDER BY tipo DESC;
 -- Q2 (3.2) Cantidad de registros disponibles por tipo de taxi
 SELECT regexp_extract(filename, '(yellow|green)_tripdata', 1) AS tipo,
        COUNT(*)                                              AS registros
-FROM read_parquet('data/raw/*/*/*.parquet', filename = true, union_by_name = true)
+FROM read_parquet('data/raw/*/2026/*.parquet', filename = true, union_by_name = true)
 GROUP BY tipo
 ORDER BY tipo DESC;
 
 
 -- Q3 (3.3 y 3.4) Columnas y tipos de datos de cada tipo de taxi
-DESCRIBE SELECT * FROM read_parquet('data/raw/yellow/*/*.parquet');
-DESCRIBE SELECT * FROM read_parquet('data/raw/green/*/*.parquet');
+-- union_by_name combina el esquema de todos los archivos (request_source solo
+-- existe desde junio de 2026); sin el, DESCRIBE solo muestra el del primer archivo
+DESCRIBE SELECT * FROM read_parquet('data/raw/yellow/2026/*.parquet', union_by_name = true);
+DESCRIBE SELECT * FROM read_parquet('data/raw/green/2026/*.parquet', union_by_name = true);
 
 
 -- Q4 (3.4) Tamanio en disco de columnas categoricas vs tamanio estimado en memoria
@@ -38,7 +40,7 @@ DESCRIBE SELECT * FROM read_parquet('data/raw/green/*/*.parquet');
 SELECT path_in_schema                                     AS columna,
        ROUND(SUM(total_compressed_size) / 1024 ** 2, 1)   AS mb_en_disco,
        ROUND(30040469 * 8 / 1024 ** 2, 1)                 AS mb_en_memoria_bigint
-FROM parquet_metadata('data/raw/*/*/*.parquet')
+FROM parquet_metadata('data/raw/*/2026/*.parquet')
 WHERE path_in_schema IN ('payment_type', 'RatecodeID', 'passenger_count')
 GROUP BY path_in_schema
 ORDER BY path_in_schema;
@@ -48,12 +50,12 @@ ORDER BY path_in_schema;
 SELECT * EXCLUDE (filename, file_row_number)
 FROM (
     (SELECT 'yellow' AS tipo, *
-     FROM read_parquet('data/raw/yellow/*/*.parquet', filename = true, file_row_number = true)
+     FROM read_parquet('data/raw/yellow/2026/*.parquet', filename = true, file_row_number = true)
      ORDER BY hash(filename, file_row_number, 123)
      LIMIT 5)
     UNION ALL BY NAME
     (SELECT 'green' AS tipo, *
-     FROM read_parquet('data/raw/green/*/*.parquet', filename = true, file_row_number = true)
+     FROM read_parquet('data/raw/green/2026/*.parquet', filename = true, file_row_number = true)
      ORDER BY hash(filename, file_row_number, 123)
      LIMIT 5)
 )
@@ -67,7 +69,7 @@ SELECT regexp_extract(filename, '(yellow|green)_tripdata', 1)         AS tipo,
        COALESCE(tpep_pickup_datetime, lpep_pickup_datetime)            AS pickup,
        COALESCE(tpep_dropoff_datetime, lpep_dropoff_datetime)          AS dropoff,
        *
-FROM read_parquet('data/raw/*/*/*.parquet', filename = true, union_by_name = true);
+FROM read_parquet('data/raw/*/2026/*.parquet', filename = true, union_by_name = true);
 
 
 -- Q7 (3.6) Conteo de problemas de calidad de datos por tipo de taxi
@@ -122,7 +124,7 @@ ORDER BY tipo DESC;
 -- solo se leen las columnas de fecha de inicio
 SELECT regexp_extract(filename, '(yellow|green)_tripdata', 1) AS tipo,
        COUNT(*)                                              AS viajes
-FROM read_parquet('data/raw/*/*/*.parquet', filename = true, union_by_name = true)
+FROM read_parquet('data/raw/*/2026/*.parquet', filename = true, union_by_name = true)
 WHERE COALESCE(tpep_pickup_datetime, lpep_pickup_datetime) >= TIMESTAMP '2026-03-01'
   AND COALESCE(tpep_pickup_datetime, lpep_pickup_datetime) <  TIMESTAMP '2026-04-01'
 GROUP BY tipo

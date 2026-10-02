@@ -165,7 +165,7 @@ docker exec -w /workspace lab8-lab python scripts/download_data.py
 Opciones disponibles:
 
 ```bash
-python scripts/download_data.py                        # amarillos y verdes de 2026
+python scripts/download_data.py                        # años por defecto: 2024 y 2026
 python scripts/download_data.py --taxi yellow          # solo un tipo de taxi
 python scripts/download_data.py --anio 2024 2025 2026  # uno o varios años
 ```
@@ -177,7 +177,8 @@ descarga los meses que la TLC haya publicado.
 **Cambios realizados al script original**
 
 - **Años configurables:** se agregó el argumento `--anio`, ya que el original tenía 2026 fijo en
-  el código.
+  el código. Los años que se descargan sin argumentos se definen en `ANIOS_POR_DEFECTO`, que en el
+  Ejercicio 5 se actualizó a 2024 y 2026 para incorporar 2024.
 - **Rutas independientes del directorio de ejecución:** el destino se resuelve a partir de la
   ubicación del script, de tal forma que siempre se guarda en `data/raw/` del proyecto.
 - **Manejo de errores:** se distingue entre un mes no publicado (HTTP 403/404) y un error de red o
@@ -189,7 +190,8 @@ descarga los meses que la TLC haya publicado.
 
 **Verificación de que la descarga está completa**
 
-`notebooks/ejercicio_2.ipynb` valida la descarga en dos niveles:
+`notebooks/ejercicio_2.ipynb` (2026) y `notebooks/ejercicio_5.ipynb` (2024) validan la descarga en
+dos niveles:
 
 1. **Archivos:** se consulta al servidor qué meses están publicados y se comprueba que cada uno
    exista localmente, con el mismo tamaño que informa el servidor y legible como Parquet.

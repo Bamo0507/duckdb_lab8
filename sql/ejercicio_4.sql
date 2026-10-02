@@ -2,7 +2,7 @@
 -- Ejercicio 4 - Analisis exploratorio utilizando DuckDB
 --
 -- Consultas de notebooks/ejercicio_4.ipynb. Todas leen directamente los archivos
--- Parquet de data/raw/ a traves de las vistas viajes y viajes_limpios. Las rutas
+-- Parquet de 2026 a traves de las vistas viajes y viajes_limpios. Las rutas
 -- son relativas a la raiz del proyecto (/workspace dentro del contenedor lab).
 -- Las preguntas P1 a P12 corresponden al inciso 4.1 del notebook.
 
@@ -14,7 +14,7 @@ SELECT regexp_extract(filename, '(yellow|green)_tripdata', 1)         AS tipo,
        COALESCE(tpep_dropoff_datetime, lpep_dropoff_datetime)          AS dropoff,
        passenger_count IS NULL AND RatecodeID IS NULL                  AS sin_metadatos,
        *
-FROM read_parquet('data/raw/*/*/*.parquet', filename = true, union_by_name = true);
+FROM read_parquet('data/raw/*/2026/*.parquet', filename = true, union_by_name = true);
 
 
 -- Preparacion: Comparacion del bloque sin metadatos contra el resto de viajes
