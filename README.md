@@ -154,7 +154,47 @@ antes de levantar el ambiente.
 
 ## Como descargar los datos
 
-<!-- TODO (Ejercicios 2.6, 5.1 y 8.1) -->
+Los datos se obtienen con `scripts/download_data.py`, directamente desde la fuente oficial de la
+TLC. El script se ejecuta dentro del contenedor `lab`, ya sea desde una terminal de JupyterLab o
+desde la computadora:
+
+```bash
+docker exec -w /workspace lab8-lab python scripts/download_data.py
+```
+
+Opciones disponibles:
+
+```bash
+python scripts/download_data.py                        # amarillos y verdes de 2026
+python scripts/download_data.py --taxi yellow          # solo un tipo de taxi
+python scripts/download_data.py --anio 2024 2025 2026  # uno o varios años
+```
+
+Los archivos se guardan en `data/raw/<tipo>/<anio>/<tipo>_tripdata_<anio>-<mes>.parquet`. El script
+puede ejecutarse las veces que sea necesario, ya que omite los archivos que ya existen y solo
+descarga los meses que la TLC haya publicado.
+
+**Cambios realizados al script original**
+
+- **Años configurables:** se agregó el argumento `--anio`, ya que el original tenía 2026 fijo en
+  el código.
+- **Rutas independientes del directorio de ejecución:** el destino se resuelve a partir de la
+  ubicación del script, de tal forma que siempre se guarda en `data/raw/` del proyecto.
+- **Manejo de errores:** se distingue entre un mes no publicado (HTTP 403/404) y un error de red o
+  del servidor, el cual se reporta como fallido en lugar de como "no publicado".
+- **Verificación de la descarga:** antes de guardar cada archivo se valida que su tamaño coincida
+  con el informado por el servidor y que sea un Parquet legible.
+- **Espera entre intentos:** los reintentos esperan un tiempo creciente (2 s, 4 s) y se hace una
+  pausa de 1 s entre descargas para no saturar al servidor.
+
+**Verificación de que la descarga está completa**
+
+`notebooks/ejercicio_2.ipynb` valida la descarga en dos niveles:
+
+1. **Archivos:** se consulta al servidor qué meses están publicados y se comprueba que cada uno
+   exista localmente, con el mismo tamaño que informa el servidor y legible como Parquet.
+2. **Contenido:** con DuckDB se verifica que cada archivo tenga registros, que no falten meses y
+   que más del 99.9 % de los viajes de cada archivo corresponda al mes que indica su nombre.
 
 ## Como ejecutar el analisis
 
