@@ -1,0 +1,25 @@
+escenario,registros,creacion_tabla_s,consulta,tiempo_parquet_s,tiempo_tabla_s,aceleracion_tabla
+2026,30040469,17.4,C1 - Conteo total de viajes,0.015,0.002,6.71
+2026,30040469,17.4,C2 - Viajes por mes y tipo (P1),3.149,1.369,2.3
+2026,30040469,17.4,C3 - Viajes por hora del dia (P2),2.568,0.914,2.81
+2026,30040469,17.4,C4 - Distancia y duracion mediana por mes (P3),4.391,2.666,1.65
+2026,30040469,17.4,C5 - Percentiles del monto por tipo (P6),3.091,1.54,2.01
+2026,30040469,17.4,C6 - Formas de pago por tipo (P7),2.573,0.97,2.65
+2026,30040469,17.4,C7 - Propina promedio con tarjeta por mes (P8),2.3,0.914,2.52
+2026,30040469,17.4,C8 - Monto total cobrado por mes (P11),3.022,1.354,2.23
+2024,41829938,23.9,C1 - Conteo total de viajes,0.02,0.003,6.24
+2024,41829938,23.9,C2 - Viajes por mes y tipo (P1),4.046,1.88,2.15
+2024,41829938,23.9,C3 - Viajes por hora del dia (P2),3.466,1.238,2.8
+2024,41829938,23.9,C4 - Distancia y duracion mediana por mes (P3),6.013,3.731,1.61
+2024,41829938,23.9,C5 - Percentiles del monto por tipo (P6),4.548,2.099,2.17
+2024,41829938,23.9,C6 - Formas de pago por tipo (P7),3.463,1.303,2.66
+2024,41829938,23.9,C7 - Propina promedio con tarjeta por mes (P8),3.796,1.516,2.5
+2024,41829938,23.9,C8 - Monto total cobrado por mes (P11),4.195,1.882,2.23
+2024_2026,71870407,35.8,C1 - Conteo total de viajes,0.053,0.01,5.22
+2024_2026,71870407,35.8,C2 - Viajes por mes y tipo (P1),7.275,3.528,2.06
+2024_2026,71870407,35.8,C3 - Viajes por hora del dia (P2),6.508,2.419,2.69
+2024_2026,71870407,35.8,C4 - Distancia y duracion mediana por mes (P3),11.009,6.336,1.74
+2024_2026,71870407,35.8,C5 - Percentiles del monto por tipo (P6),7.487,3.653,2.05
+2024_2026,71870407,35.8,C6 - Formas de pago por tipo (P7),6.89,2.35,2.93
+2024_2026,71870407,35.8,C7 - Propina promedio con tarjeta por mes (P8),9.799,2.589,3.78
+2024_2026,71870407,35.8,C8 - Monto total cobrado por mes (P11),8.196,3.793,2.16

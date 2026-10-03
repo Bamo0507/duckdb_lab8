@@ -204,7 +204,29 @@ dos niveles:
 
 ## Como reproducir los benchmarks
 
-<!-- TODO (Ejercicio 6) -->
+El benchmark compara las mismas consultas sobre los archivos Parquet y sobre una tabla
+materializada en `data/processed/taxis.duckdb`. Su lógica se encuentra en `scripts/benchmark.py` y
+se puede ejecutar de dos formas:
+
+1. **Notebook:** ejecutar `notebooks/ejercicio_6.ipynb`, que crea la tabla, mide las consultas con
+   todos los años descargados y repite el benchmark para cada año por separado. Los resultados se
+   guardan en `docs/benchmark_resultados.csv`.
+2. **Línea de comandos:** para un conjunto específico de años:
+
+   ```bash
+   docker exec -w /workspace lab8-lab python scripts/benchmark.py --anio 2024 2026
+   ```
+
+   Los resultados se guardan en `data/processed/benchmark_<anios>.csv`.
+
+**Consideraciones:**
+
+- Cada consulta tiene una ejecución de calentamiento y luego se reporta la mediana de tres
+  ejecuciones (`--repeticiones` permite cambiarlo).
+- DuckDB se limita a 2 GB de memoria, ya que el contenedor la comparte con Metabase; por la misma
+  razón, las medianas y percentiles se calculan con `approx_quantile`.
+- Un archivo `.duckdb` admite un solo proceso con permiso de escritura, por lo que el benchmark no
+  debe ejecutarse mientras otro notebook o Metabase tenga abierta la base en modo escritura.
 
 ## Como generar los resultados principales
 
